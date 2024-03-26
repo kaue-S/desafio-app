@@ -17,6 +17,8 @@ import * as MediaLibrary from "expo-media-library";
 
 //geolocalização
 import GeoLocalizacao from "./src/Components/GeoLocalizacao";
+import Camera from "./src/Components/Camera";
+import Container from "./src/Components/Container";
 
 export default function App() {
   /* Captura de foto */
@@ -87,137 +89,7 @@ export default function App() {
 
   return (
     <>
-      <StatusBar />
-      <View style={styles.container}>
-        <ScrollView>
-          <Pressable
-            onPress={abrirCamera}
-            style={styles.BotaoFoto}
-            title="Tirar foto"
-          >
-            <Text style={styles.textoBotao}>Tirar foto</Text>
-          </Pressable>
-
-          <Pressable
-            onPress={escolherFoto}
-            style={styles.BotaoFoto}
-            title="Escolher foto"
-          >
-            <Text style={styles.textoBotao}>Escolher foto</Text>
-          </Pressable>
-
-          {foto && (
-            <View style={styles.campoBusca}>
-              <Image
-                source={{ uri: foto }}
-                style={{ width: "100%", height: 300 }}
-              />
-              <View style={styles.tituloFoto}>
-                <Text>Digite o título da foto</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Título da foto"
-                  onChangeText={(text) => setTitulo(text)}
-                />
-                <View style={styles.botoes}>
-                  <Pressable style={styles.botaoExcluir} title="excluir">
-                    <Text style={styles.textoBotao}>🗑 Excluir</Text>
-                  </Pressable>
-
-                  <Pressable
-                    style={styles.botaoSalvar}
-                    title="salvar"
-                    onPress={salvarFoto}
-                  >
-                    <Text style={styles.textoBotao}>💾 Salvar</Text>
-                  </Pressable>
-                </View>
-              </View>
-
-              {/* {botaoLocalizacao && (
-                <View style={styles.campoMapa}>
-                  <MapView
-                    style={styles.mapa}
-                    mapType="standard"
-                    region={localizacao ?? regiaoInicialMapa}
-                  >
-                    {localizacao && <Marker coordinate={localizacao} />}
-                  </MapView>
-                </View>
-              )}
-
-              <Button title="localização" onPress={marcarLocal} /> */}
-              <GeoLocalizacao />
-            </View>
-          )}
-        </ScrollView>
-      </View>
+      <Container />
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 60,
-    flex: 1,
-    backgroundColor: "#fff",
-    padding: 16,
-    gap: 25,
-  },
-
-  campoBusca: {
-    width: "100%",
-    flex: 0.8,
-  },
-
-  tituloFoto: {
-    marginVertical: 15,
-    flex: 1,
-    textAlign: "center",
-  },
-
-  input: {
-    height: 40,
-    width: "100%",
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 8,
-  },
-
-  botoes: {
-    marginVertical: 15,
-    flexDirection: "row",
-    gap: 15,
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
-
-  BotaoFoto: {
-    backgroundColor: "blue",
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    width: "100%",
-    marginVertical: 20,
-  },
-
-  botaoExcluir: {
-    backgroundColor: "red",
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-
-  botaoSalvar: {
-    backgroundColor: "green",
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-
-  textoBotao: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-});
