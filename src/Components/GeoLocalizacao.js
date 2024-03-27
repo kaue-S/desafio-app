@@ -15,8 +15,7 @@ export default function GeoLocalizacao() {
 
   const [botaoLocalizacao, setBotaoLocalizacao] = useState(false);
 
-  //state para quando o botao salvar for acionado
-  const [botaoSalvar, setBotaoSalvar] = useState(false);
+  
 
   useEffect(() => {
     async function obterLocalizacao() {

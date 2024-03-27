@@ -9,17 +9,23 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //captura de imagens
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 
-export default function Camera() {
+export default function Camera({localizacao}) {
+ 
   /* Captura de foto */
   const [foto, setFoto] = useState(null);
   const [status, requestPermission] = ImagePicker.useCameraPermissions();
 
   const [titulo, setTitulo] = useState("");
+  
+
+  //state para quando o botao salvar for acionado
+  const [botaoSalvar, setBotaoSalvar] = useState(false);
 
   //permissao para acessara câmera
 
@@ -47,6 +53,7 @@ export default function Camera() {
       await MediaLibrary.saveToLibraryAsync(imagem.assets[0].uri);
       setFoto(imagem.assets[0].uri);
     }
+
   };
   /* ============= */
 
@@ -63,6 +70,7 @@ export default function Camera() {
     if (!resultado.canceled) {
       setFoto(resultado.assets[0].uri);
     }
+   
   };
   console.log(foto);
 
@@ -72,6 +80,9 @@ export default function Camera() {
 
   /* Salvar foto com titulo e localização */
   const salvarFoto = () => {
+    console.log("Foto:", foto);
+  console.log("Titulo:", titulo);
+  console.log("Localizacao:", localizacao);
     // salvar a foto junto com o título e a localização
     const fotoSalva = {
       uri: foto,
@@ -79,6 +90,10 @@ export default function Camera() {
       localizacao: localizacao,
     };
     setBotaoSalvar(true);
+
+    // Salvar o objeto no AsyncStorage
+    AsyncStorage.setItem('fotoSalva', JSON.stringify(fotoSalva));
+
   };
 
   return(
@@ -110,7 +125,8 @@ export default function Camera() {
                 <TextInput
                   style={styles.input}
                   placeholder="Título da foto"
-                  onChangeText={(text) => setTitulo(text)}
+                  onChangeText={setTitulo}
+                  value={titulo}
                 />
                 <View style={styles.botoes}>
                   <Pressable style={styles.botaoExcluir} title="excluir">

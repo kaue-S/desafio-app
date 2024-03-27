@@ -7,7 +7,6 @@ import { ScrollView, View, StyleSheet } from "react-native";
 
 export default function Container(){
   
-
     return(
         <>
         <StatusBar />
@@ -15,7 +14,6 @@ export default function Container(){
                 <ScrollView>
                     <Camera />
                     <GeoLocalizacao />
-                  
                 </ScrollView>
             </View>
         </>
