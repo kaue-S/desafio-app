@@ -1,25 +1,31 @@
-import { SafeAreaView, View, Text, StatusBar, Pressable, StyleSheet, ScrollView } from "react-native";
-import SafeContainer from "../Components/Container";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StatusBar,
+  Pressable,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import Camera from "../Components/Camera";
 import GeoLocalizacao from "../Components/GeoLocalizacao";
-import { useEffect, useState } from "react";
 
-
-export default function Home({minhaLocalizacao}) {
-
+export default function Home() {
   return (
     <>
       <StatusBar barStyle="light-content" />
-      <SafeAreaView>
+      <View style={styles.home}>
         <ScrollView>
-          <Camera minhaLocalizacao={minhaLocalizacao}/>
+          <Camera />
           <GeoLocalizacao />
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-
-  });
+  home: {
+    padding: 16,
+  },
+});

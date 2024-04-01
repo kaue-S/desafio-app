@@ -9,24 +9,26 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //captura de imagens
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import GeoLocalizacao from "./GeoLocalizacao";
+import * as Location from "expo-location";
 
-export default function Camera({localizacao}) {
-  
+export default function Camera() {
+  /* Mostrar localização */
+  const [minhaLocalizacao, setMinhaLocalizacao] = useState(null);
+
   /* Captura de foto */
   const [foto, setFoto] = useState(null);
   const [status, requestPermission] = ImagePicker.useCameraPermissions();
 
   const [titulo, setTitulo] = useState("");
-  
 
   //state para quando o botao salvar for acionado
-  const [botaoSalvar, setBotaoSalvar] = useState(false);
+  const [mostrarFotos, setmostrarFotos] = useState(false);
 
   //permissao para acessara câmera
 
@@ -54,7 +56,6 @@ export default function Camera({localizacao}) {
       await MediaLibrary.saveToLibraryAsync(imagem.assets[0].uri);
       setFoto(imagem.assets[0].uri);
     }
-
   };
   /* ============= */
 
@@ -71,7 +72,6 @@ export default function Camera({localizacao}) {
     if (!resultado.canceled) {
       setFoto(resultado.assets[0].uri);
     }
-   
   };
   console.log(foto);
 
@@ -80,83 +80,107 @@ export default function Camera({localizacao}) {
   /* Fim captura de foto */
 
   useEffect(() => {
-    if (localizacao !== null) {
+    async function obterLocalizacao() {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Ops!", "Você não autorizou o uso da geolocalização");
+        return;
+      }
+
+      let localizacaoAtual = await Location.getCurrentPositionAsync({});
+      setMinhaLocalizacao(localizacaoAtual);
+    }
+
+    obterLocalizacao();
+  }, []);
+
+  useEffect(() => {
+    if (minhaLocalizacao !== null) {
       salvarFoto();
     }
-  }, [localizacao]);  
+  }, [minhaLocalizacao]);
 
-
-  console.log(localizacao);
+  console.log(minhaLocalizacao);
 
   /* Salvar foto com titulo e localização */
   const salvarFoto = () => {
     console.log("Foto:", foto);
     console.log("Titulo:", titulo);
-    console.log("Localizacao:", localizacao);
+    console.log("Localizacao:", minhaLocalizacao);
     // salvar a foto junto com o título e a localização
     const fotoSalva = {
       uri: foto,
       titulo: titulo,
-      localizacao: localizacao,
+      localizacao: minhaLocalizacao,
     };
-    setBotaoSalvar(true);
+    setmostrarFotos(true);
 
     // Salvar o objeto no AsyncStorage
-    AsyncStorage.setItem('fotoSalva', JSON.stringify(fotoSalva));
+    AsyncStorage.setItem("fotoSalva", JSON.stringify(fotoSalva));
 
+    //exibindo a foto, com titulo e localização
+    const recuperarFoto = async () => {
+      const fotoSalva = await AsyncStorage.getItem("fotoSalva");
+      const fotoRecuperada = JSON.parse(fotoSalva);
+
+      //Exibindo a foto, o título e a localização
+      console.log("Foto recuperada:", fotoRecuperada.uri);
+      console.log("Titulo recuperado:", fotoRecuperada.titulo);
+      console.log("Localizacao recuperada:", fotoRecuperada.localizacao);
+    };
+    recuperarFoto();
   };
 
- 
-  return(
+  return (
     <View>
-          <Pressable
-            onPress={abrirCamera}
-            style={styles.BotaoFoto}
-            title="Tirar foto"
-          >
-            <Text style={styles.textoBotao}>Tirar foto</Text>
-          </Pressable>
+      <Pressable
+        onPress={abrirCamera}
+        style={styles.BotaoFoto}
+        title="Tirar foto"
+      >
+        <Text style={styles.textoBotao}>Tirar foto</Text>
+      </Pressable>
 
-          <Pressable
-            onPress={escolherFoto}
-            style={styles.BotaoFoto}
-            title="Escolher foto"
-          >
-            <Text style={styles.textoBotao}>Escolher foto</Text>
-          </Pressable>
+      <Pressable
+        onPress={escolherFoto}
+        style={styles.BotaoFoto}
+        title="Escolher foto"
+      >
+        <Text style={styles.textoBotao}>Escolher foto</Text>
+      </Pressable>
 
-          {foto && (
-            <View style={styles.campoBusca}>
-              <Image
-                source={{ uri: foto }}
-                style={{ width: "100%", height: 300 }}
-              />
-              <View style={styles.tituloFoto}>
-                <Text>Digite o título da foto</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Título da foto"
-                  onChangeText={setTitulo}
-                  value={titulo}
-                />
-                <View style={styles.botoes}>
-                  <Pressable style={styles.botaoExcluir} title="excluir">
-                    <Text style={styles.textoBotao}>🗑 Excluir</Text>
-                  </Pressable>
+      {foto && (
+        <View style={styles.campoBusca}>
+          <Image
+            source={{ uri: foto }}
+            style={{ width: "100%", height: 300 }}
+          />
+          <View style={styles.tituloFoto}>
+            <Text>Digite o título da foto</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Título da foto"
+              onChangeText={setTitulo}
+              value={titulo}
+            />
+            <View style={styles.botoes}>
+              <Pressable style={styles.botaoExcluir} title="excluir">
+                <Text style={styles.textoBotao}>🗑 Excluir</Text>
+              </Pressable>
 
-                  <Pressable
-                    style={styles.botaoSalvar}
-                    title="salvar"
-                    onPress={salvarFoto}
-                  >
-                    <Text style={styles.textoBotao}>💾 Salvar</Text>
-                  </Pressable>
-                </View>
-              </View>
+              <Pressable
+                style={styles.botaoSalvar}
+                title="salvar"
+                onPress={salvarFoto}
+              >
+                <Text style={styles.textoBotao}>💾 Salvar</Text>
+              </Pressable>
             </View>
-          )}
+          </View>
+        </View>
+      )}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -201,7 +225,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    
   },
 
   botaoSalvar: {
