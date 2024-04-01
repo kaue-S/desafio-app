@@ -14,9 +14,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //captura de imagens
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
+import GeoLocalizacao from "./GeoLocalizacao";
 
 export default function Camera({localizacao}) {
- 
+  
   /* Captura de foto */
   const [foto, setFoto] = useState(null);
   const [status, requestPermission] = ImagePicker.useCameraPermissions();
@@ -200,6 +201,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 16,
+    
   },
 
   botaoSalvar: {

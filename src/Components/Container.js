@@ -1,31 +1,18 @@
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
+import Home from "../Screens/Home";
 import Camera from "./Camera";
-import GeoLocalizacao from "./GeoLocalizacao";
-import { ScrollView, View, StyleSheet } from "react-native";
 
-
-export default function Container({localizacao}){
-    
-  
+export default function Container(){
     return(
-        <>
-        <StatusBar />
-            <View style={styles.container}>
-                <ScrollView>
-                    <Camera localizacao={localizacao}/>
-                    <GeoLocalizacao />
-                </ScrollView>
-            </View>
-        </>
-    );
+        <SafeAreaView style={styles.container}>
+            <Home />
+        </SafeAreaView>
+    )
 }
 
 const styles = StyleSheet.create({
     container: {
-      marginTop: 60,
-      flex: 1,
-      backgroundColor: "#fff",
+      justifyContent: "center",
       padding: 16,
       gap: 25,
     },
