@@ -78,11 +78,20 @@ export default function Camera({localizacao}) {
 
   /* Fim captura de foto */
 
+  useEffect(() => {
+    if (localizacao !== null) {
+      salvarFoto();
+    }
+  }, [localizacao]);  
+
+
+  console.log(localizacao);
+
   /* Salvar foto com titulo e localização */
   const salvarFoto = () => {
     console.log("Foto:", foto);
-  console.log("Titulo:", titulo);
-  console.log("Localizacao:", localizacao);
+    console.log("Titulo:", titulo);
+    console.log("Localizacao:", localizacao);
     // salvar a foto junto com o título e a localização
     const fotoSalva = {
       uri: foto,
@@ -96,6 +105,7 @@ export default function Camera({localizacao}) {
 
   };
 
+ 
   return(
     <View>
           <Pressable

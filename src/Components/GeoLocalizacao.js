@@ -60,7 +60,7 @@ export default function GeoLocalizacao() {
       latitudeDelta: 0.02,
       longitudeDelta: 0.01,
     });
-
+ 
     setBotaoLocalizacao(true);
   };
 

@@ -5,14 +5,15 @@ import GeoLocalizacao from "./GeoLocalizacao";
 import { ScrollView, View, StyleSheet } from "react-native";
 
 
-export default function Container(){
+export default function Container({localizacao}){
+    
   
     return(
         <>
         <StatusBar />
             <View style={styles.container}>
                 <ScrollView>
-                    <Camera />
+                    <Camera localizacao={localizacao}/>
                     <GeoLocalizacao />
                 </ScrollView>
             </View>
